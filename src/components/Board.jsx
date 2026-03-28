@@ -123,7 +123,7 @@ function Board() {
     const text = prompt("Card title");
     if (!text) return;
 
-    await fetch("http://localhost:5001/cards", {
+    await fetch("https://trello-clone-lj89.onrender.com/cards", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -135,7 +135,7 @@ function Board() {
   };
 
   const deleteCard = async (listId, cardId) => {
-    await fetch(`http://localhost:5001/cards/${cardId}`, {
+    await fetch(`https://trello-clone-lj89.onrender.com/cards/${cardId}`, {
       method: "DELETE",
     });
 
@@ -146,7 +146,7 @@ function Board() {
     const newText = prompt("Edit card", oldText);
     if (!newText) return;
 
-    await fetch(`http://localhost:5001/cards/${cardId}`, {
+    await fetch(`https://trello-clone-lj89.onrender.com/cards/${cardId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ text: newText }),
