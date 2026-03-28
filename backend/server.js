@@ -9,7 +9,6 @@ app.use(cors());
 app.use(express.json());
 
 // ================= DB CONNECTION =================
-
 const db = mysql.createConnection(process.env.MYSQL_URL);
 
 db.connect((err) => {
@@ -27,7 +26,7 @@ app.get("/", (req, res) => {
 
 // ================= LIST ROUTES =================
 
-// ✅ GET ALL LISTS
+// GET LISTS
 app.get("/lists", (req, res) => {
   db.query("SELECT * FROM lists", (err, result) => {
     if (err) {
@@ -38,9 +37,13 @@ app.get("/lists", (req, res) => {
   });
 });
 
-// ✅ ADD LIST
+// ADD LIST
 app.post("/lists", (req, res) => {
   const { title } = req.body;
+
+  if (!title) {
+    return res.status(400).json({ error: "Title required" });
+  }
 
   db.query(
     "INSERT INTO lists (title, board_id, position) VALUES (?, 1, 0)",
@@ -55,7 +58,7 @@ app.post("/lists", (req, res) => {
   );
 });
 
-// ✅ DELETE LIST
+// DELETE LIST
 app.delete("/lists/:id", (req, res) => {
   const { id } = req.params;
 
@@ -70,15 +73,13 @@ app.delete("/lists/:id", (req, res) => {
 
 // ================= CARD ROUTES =================
 
-// ✅ GET CARDS BY LIST
+// GET CARDS
 app.get("/cards/:listId", (req, res) => {
   const { listId } = req.params;
 
-  console.log("FETCH CARDS FOR LIST:", listId);
-
   db.query(
     "SELECT * FROM cards WHERE list_id = ?",
-    [listId],
+    [Number(listId)],
     (err, result) => {
       if (err) {
         console.log("GET CARDS ERROR:", err);
@@ -89,9 +90,19 @@ app.get("/cards/:listId", (req, res) => {
   );
 });
 
-// ✅ ADD CARD
+// ADD CARD ✅ FIXED
 app.post("/cards", (req, res) => {
-  const { text, list_id } = req.body;
+  console.log("BODY:", req.body); // debug
+
+  let { text, list_id } = req.body;
+
+  // ✅ VALIDATION
+  if (!text || !list_id) {
+    return res.status(400).json({ error: "Missing text or list_id" });
+  }
+
+  // ✅ FORCE NUMBER
+  list_id = Number(list_id);
 
   db.query(
     "INSERT INTO cards (text, list_id) VALUES (?, ?)",
@@ -101,12 +112,14 @@ app.post("/cards", (req, res) => {
         console.log("ADD CARD ERROR:", err);
         return res.status(500).json(err);
       }
+
+      console.log("CARD ADDED ✅");
       res.json(result);
     }
   );
 });
 
-// ✅ DELETE CARD
+// DELETE CARD
 app.delete("/cards/:id", (req, res) => {
   const { id } = req.params;
 
@@ -119,12 +132,14 @@ app.delete("/cards/:id", (req, res) => {
   });
 });
 
-// ✅ UPDATE CARD (EDIT)
+// UPDATE CARD
 app.put("/cards/:id", (req, res) => {
   const { id } = req.params;
   const { text } = req.body;
 
-  console.log("UPDATE CARD:", id, text);
+  if (!text) {
+    return res.status(400).json({ error: "Text required" });
+  }
 
   db.query(
     "UPDATE cards SET text = ? WHERE id = ?",
@@ -135,7 +150,6 @@ app.put("/cards/:id", (req, res) => {
         return res.status(500).json(err);
       }
 
-      console.log("CARD UPDATED SUCCESS ✅");
       res.json(result);
     }
   );
