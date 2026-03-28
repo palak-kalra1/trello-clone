@@ -8,13 +8,13 @@ function Board() {
 
   // ================= FETCH =================
   const fetchLists = async () => {
-    const res = await fetch("http://localhost:5001/lists");
+    const res = await fetch("https://trello-clone-lj89.onrender.com/lists");
     const data = await res.json();
 
     const listsWithCards = await Promise.all(
       data.map(async (list) => {
         const resCards = await fetch(
-          `http://localhost:5001/cards/${list.id}`
+          `https://trello-clone-lj89.onrender.com/cards/${list.id}`
         );
         const cards = await resCards.json();
 
@@ -92,7 +92,7 @@ function Board() {
     const title = prompt("Enter list title");
     if (!title) return;
 
-    await fetch("http://localhost:5001/lists", {
+    await fetch("https://trello-clone-lj89.onrender.com/lists", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title }),
@@ -102,7 +102,7 @@ function Board() {
   };
 
   const deleteList = async (id) => {
-    await fetch(`http://localhost:5001/lists/${id}`, {
+    await fetch(`https://trello-clone-lj89.onrender.com/lists/${id}`, {
       method: "DELETE",
     });
 
