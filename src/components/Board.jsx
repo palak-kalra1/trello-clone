@@ -119,41 +119,41 @@ function Board() {
   };
 
   // ================= CARD =================
-  const addCard = async (listId) => {
-    const text = prompt("Card title");
-    if (!text) return;
+const addCard = async (listId) => {
+  const text = prompt("Card title");
+  if (!text) return;
 
-    await fetch("https://trello-clone-lj89.onrender.com/cards", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ text, list_id: listId }),
-    });
+  await fetch("https://trello-clone-lj89.onrender.com/cards", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ text, list_id: listId }),
+  });
 
-    fetchLists();
-  };
+  fetchLists();
+};
 
-  const deleteCard = async (listId, cardId) => {
-    await fetch(`https://trello-clone-lj89.onrender.com/cards/${cardId}`, {
-      method: "DELETE",
-    });
+const deleteCard = async (listId, cardId) => {
+  await fetch(`https://trello-clone-lj89.onrender.com/cards/${cardId}`, {
+    method: "DELETE",
+  });
 
-    fetchLists();
-  };
+  fetchLists();
+};
 
-  const editCard = async (cardId, oldText) => {
-    const newText = prompt("Edit card", oldText);
-    if (!newText) return;
+const editCard = async (cardId, oldText) => {
+  const newText = prompt("Edit card", oldText);
+  if (!newText) return;
 
-    await fetch(`https://trello-clone-lj89.onrender.com/cards/${cardId}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text: newText }),
-    });
+  await fetch(`https://trello-clone-lj89.onrender.com/cards/${cardId}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ text: newText }),
+  });
 
-    fetchLists();
-  };
+  fetchLists();
+};
 
   return (
     <div style={{ padding: "20px" }}>
