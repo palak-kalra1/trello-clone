@@ -149,15 +149,11 @@ const editCard = async (cardId, oldText) => {
   await fetch(`https://trello-clone-lj89.onrender.com/cards/${cardId}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ 
-  text: text, 
-  list_id: Number(listId) 
-}),
+    body: JSON.stringify({ text: newText }),
   });
 
   fetchLists();
 };
-
   return (
     <div style={{ padding: "20px" }}>
       <h1>My Trello Clone</h1>
